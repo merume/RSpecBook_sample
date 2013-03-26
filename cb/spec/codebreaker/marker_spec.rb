@@ -33,6 +33,13 @@ module Codebreaker
     end
 
     describe "#number_match_count" do
+      context "with 1 exact match duplicated in guess" do
+        it "returns 0" do
+          pending("refactor number_match_count")
+          marker = Marker.new('1234', '1155')
+          marker.number_match_count.should == 0
+        end
+      end
       context "with no matches" do
         it "returns 0" do
           marker = Marker.new('1234','5555')
@@ -53,6 +60,7 @@ module Codebreaker
           marker.number_match_count.should == 0
         end
       end
+
       context "with 1 exact match and 1 number match" do
         it "returns 1" do
           marker = Marker.new('1234','1525')
