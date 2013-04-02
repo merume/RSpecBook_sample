@@ -12,5 +12,5 @@ Feature: Showtime Descriptions
 
   Scenario: Hide minutes for times ending with 00
     Given a movie
-    When T set the showtme to "2007-10-10" at "2:00pm"
+    When I set the showtime to "2007-10-10" at "2:00pm"
     Then the showtime description should be "October 10 2007 (2pm)"
