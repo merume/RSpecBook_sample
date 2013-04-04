@@ -56,3 +56,38 @@ end
 # See https://github.com/cucumber/cucumber-rails/blob/master/features/choose_javascript_database_strategy.feature
 Cucumber::Rails::Database.javascript_strategy = :truncation
 
+ENV["RAILS_ENV"] ||= "test"
+require File.expand_path(File.dirname(__FILE__) + '/../../config/environment')
+require 'cucumber/formatter/unicode'
+require 'cucumber/rails/world'
+require 'cucumber/rails/active_record'
+require 'cucumber/web/tableish'
+
+require 'webrat'
+require 'webrat/core/matchers'
+
+Webrat.configure do |config|
+  config.mode = :selenium # was :rack
+  config.application_framework = :rake
+  config.open_error_files = false
+end
+
+World(Rack::Test::Methods)
+World(Webrat::Methods)
+
+Cucumber::Rails::World.use_transactional_fixtures = true
+
+if defined?(ActiveRecord::Base)
+  begin
+    require 'database_cleaner'
+    DatabaseCleaner.strategy = :truncation
+  rescue LoadError => ignore_if_database_cleaner_not_present
+  end
+end
+
+class ActiveSupport::TestCase
+  setup do |session|
+    session.host! "localhost:3001"
+  end
+end
+
