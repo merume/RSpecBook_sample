@@ -22,5 +22,38 @@ describe MessagesController do
       post :create
       response.should redirect_to(:action => "index")
     end
+
+    context "when the message saves successfully" do
+      before do
+        message.stub(:save).and_return(true)
+      end
+
+      it "sets a flash[:notice] message" do
+        post :create
+        flash[:notice].should eq("The message was saved successfully.")
+      end
+
+      it "redirects to the Messages index" do
+        post :create
+        response.should redirect_to(:action => "index")
+      end
+    end
+
+    context "when the message fails to save" do
+      before do
+        message.stub(:save).and_return(false)
+      end
+
+      it "assigns @message" do
+        post :create
+        assigns[:message].should eq(message)
+      end
+      
+      it "renders the new template" do
+        post :create
+        response.should render_template("new")
+      end
+    end
   end
 end
+
